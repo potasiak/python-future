@@ -459,7 +459,14 @@ def install_aliases():
         __import__(oldmodname)
         oldmod = sys.modules[oldmodname]
 
-        obj = getattr(oldmod, oldobjname)
+        try:
+            obj = getattr(oldmod, oldobjname)
+        except AttributeError:
+            print('===== DEBUG =====')
+            print(oldmod, type(oldmod), file=sys.stderr)
+            print(dir(oldmod), file=sys.stderr)
+            print('===== END DEBUG =====')
+            raise
         setattr(newmod, newobjname, obj)
 
     # Hack for urllib so it appears to have the same structure on Py2 as on Py3
